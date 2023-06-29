@@ -1,46 +1,50 @@
-import inquirer from "inquirer";
+import { getProjectRootPath } from "@aerofoil/aerofoil-core/util/getProjectRootPath";
+import { logger } from "@aerofoil/logger";
 import fs from "fs-extra";
 import path from "path";
 import { fileURLToPath } from "url";
 
-const directory = path.resolve(
+const sourceDirectory = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   "source"
 );
 
 export async function scaffold({
-  deploymentName,
-  deploymentPath,
+  generateDeploymentInfo,
+  generateDatabaseInfo,
   deploymentTypes,
+  addTodos,
 }) {
-  console.log(`Scaffolding ${deploymentName} at ${deploymentPath}`);
-  const type = await promptDeploymentType(deploymentTypes);
-  await fs.copy(directory, deploymentPath);
-  const packageJSON = await fs.readJSON(
-    path.resolve(deploymentPath, "package.json")
-  );
-  packageJSON.name = deploymentName;
-  await fs.writeJSON(
-    path.resolve(deploymentPath, "package.json"),
-    packageJSON,
-    {
-      spaces: "\t",
-    }
-  );
-  return {
-    deployment: {
-      type: type,
-    },
-  };
-}
-
-export async function promptDeploymentType(deploymentTypes) {
-  const { type } = await inquirer.prompt({
-    name: "type",
-    type: "list",
-    choices: deploymentTypes,
-    message: `Which deployment type should be used?`,
-  });
-
-  return type;
+  const rootPath = await getProjectRootPath();
+  const type = await logger.listInput("Select deployment type", [
+    deploymentTypes.map((t) => ({
+      name: t,
+      value: t,
+    })),
+  ]);
+  if (type != null) {
+    const deployInfo = await generateDeploymentInfo(null, {
+      deployment: { type },
+    });
+    const deploymentRootPath = path.resolve(
+      rootPath,
+      "deployments",
+      deployInfo.name
+    );
+    logger.info(`Scaffolding ${deployInfo.name} at ${deploymentRootPath}`);
+    await fs.copy(sourceDirectory, deploymentRootPath);
+    const packageJSON = await fs.readJSON(
+      path.resolve(deploymentRootPath, "package.json")
+    );
+    packageJSON.name = deployInfo.name;
+    await fs.writeJSON(
+      path.resolve(deploymentRootPath, "package.json"),
+      packageJSON,
+      {
+        spaces: "\t",
+      }
+    );
+  } else {
+    throw new Error("No deployment type selected");
+  }
 }
