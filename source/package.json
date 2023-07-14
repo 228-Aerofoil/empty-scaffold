@@ -14,9 +14,9 @@
 		"deploy:branch": "aerofoil deploy --local-package --branch"
 	},
 	"devDependencies": {
-		"eslint": "^7.23.0",
+		"eslint": "latest",
 		"eslint-config-aerofoil": "workspace:*",
 		"tsconfig": "workspace:*",
-		"typescript": "^5.0.2"
+		"typescript": "latest"
 	}
 }

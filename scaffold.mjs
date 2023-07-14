@@ -1,3 +1,4 @@
+import { getProjectConfig } from "@aerofoil/aerofoil-core/util/getProjectConfig";
 import { getProjectRootPath } from "@aerofoil/aerofoil-core/util/getProjectRootPath";
 import { logger } from "@aerofoil/logger";
 import fs from "fs-extra";
@@ -15,6 +16,7 @@ export async function scaffold({
   deploymentTypes,
   addTodos,
 }) {
+  const projectConfig = await getProjectConfig();
   const rootPath = await getProjectRootPath();
   const type = await logger.listInput("Select deployment type", [
     deploymentTypes.map((t) => ({
@@ -36,7 +38,7 @@ export async function scaffold({
     const packageJSON = await fs.readJSON(
       path.resolve(deploymentRootPath, "package.json")
     );
-    packageJSON.name = deployInfo.name;
+    packageJSON.name = `@${projectConfig.name}/${deployInfo.name}`;
     await fs.writeJSON(
       path.resolve(deploymentRootPath, "package.json"),
       packageJSON,
