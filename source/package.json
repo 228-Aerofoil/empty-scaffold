@@ -13,10 +13,28 @@
 		"deploy:production": "aerofoil deploy --local-package --production",
 		"deploy:branch": "aerofoil deploy --local-package --branch"
 	},
+	"type": "module",
 	"devDependencies": {
 		"eslint": "latest",
 		"eslint-config-aerofoil": "workspace:*",
 		"tsconfig": "workspace:*",
 		"typescript": "latest"
+	},
+	"eslintConfig": {
+		"extends": [
+			"aerofoil/base"
+		],
+		"parserOptions": {
+			"sourceType": "module",
+			"project": "./tsconfig.json"
+		},
+		"settings": {
+			"import/resolver": {
+				"typescript": {
+					"alwaysTryTypes": true,
+					"project": "./tsconfig.json"
+				}
+			}
+		}
 	}
 }

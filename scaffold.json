@@ -1,11 +1,11 @@
 {
 	"deploymentDefaultName": "empty-scaffold",
 	"todos": [],
-	"scaffoldScriptLocation": "./scaffold.mjs",
+	"scaffoldScriptLocation": "./scaffold.js",
 	"databaseRequirements": [],
 	"deploymentType": "",
 	"requiredExtensions": [],
 	"version": "1.0.0",
-	"aerofoilVersion": "0.7.0",
+	"aerofoilVersion": "0.8.0",
 	"name": "empty-scaffold"
 }
