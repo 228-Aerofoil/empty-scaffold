@@ -10,8 +10,7 @@
 		"build": "",
 		"preview": "",
 		"start": "",
-		"deploy:production": "aerofoil deploy --local-package --production",
-		"deploy:branch": "aerofoil deploy --local-package --branch"
+		"af:deploy": "aerofoil deploy --local-package --production"
 	},
 	"type": "module",
 	"devDependencies": {
